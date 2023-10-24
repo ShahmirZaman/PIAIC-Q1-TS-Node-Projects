@@ -10,7 +10,7 @@ let user:userType = {
     pin: 1100,
     balance:90000,
 }
-console.log("Welcome to ATM Built using Typescript. There is a dummy user created John Doe having balance 90,000. The pin can be found at ")
+console.log("Welcome to ATM Built using Typescript. There is a dummy user created John Doe having balance 90,000. The pin can be found at https://github.com/ShahmirZaman/PIAIC-Q1-TS-Node-Projects.git")
 const answers = await inquirer.prompt([
     {
         message: "Please Enter Pin",
@@ -20,10 +20,12 @@ const answers = await inquirer.prompt([
 ]);
 // console.log("Answers: ",answers);
 //Retry on incorrect pin
+let continueTransaction:boolean = true;
 if(Number(answers.pin) !== user.pin) {
     console.log("You have entered an incorrect pin!");
 }
 else {
+    while(continueTransaction == true) {
     const response = await inquirer.prompt([
         {
             name:"selectedType",
@@ -49,10 +51,25 @@ else {
         }
     ]);
 //    console.log("Selected Type: ",response);
+// Do you want to try another transaction
 if(response.selectedType == "Balance Inquiry") {
     console.log(`Your balance is: ${user.balance}`);
+    const toRepeat =  await inquirer.prompt([
+        {
+            name:"repeat",
+            type:"confirm",
+            message:"Do you want to try another transaction",
+        }
+    ]);
+    if(toRepeat.repeat == true)
+    continueTransaction = true;
+        else {
+           continueTransaction = false; 
+        }
 } else {
     user.balance = user.balance - response.amount; 
     console.log(`Your new balance is: ${user.balance}`);
+    continueTransaction = false;
+}
 }
 }
